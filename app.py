@@ -59,6 +59,21 @@ CREATE TABLE IF NOT EXISTS users (
     nonce BLOB NOT NULL
 )
 """)
+# Create demo user only if it does not already exist
+existing_user = connection.execute(
+    "SELECT id FROM users WHERE username = ?",
+    ("Bharathi",)
+).fetchone()
+
+if not existing_user:
+    nonce, encrypted_password = encrypt_data("12345")
+
+    connection.execute(
+        "INSERT INTO users (username, encrypted_password, nonce) VALUES (?, ?, ?)",
+        ("Bharathi", encrypted_password, nonce)
+    )
+
+    connection.commit()
 connection.close()
 
 
