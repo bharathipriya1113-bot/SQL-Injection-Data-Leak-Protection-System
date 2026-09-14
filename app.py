@@ -4,8 +4,14 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 app = Flask(__name__)
 
-AES_KEY = b"0123456789abcdef0123456789abcdef"
-CAPABILITY_CODE = "SECURE2026"
+import os
+
+AES_KEY = os.environ.get(
+    "AES_KEY",
+    "0123456789abcdef0123456789abcdef"
+).encode()
+
+CAPABILITY_CODE = os.environ.get("CAPABILITY_CODE", "SECURE2026")
 import os
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -53,8 +59,6 @@ CREATE TABLE IF NOT EXISTS users (
     nonce BLOB NOT NULL
 )
 """)
-
-connection.commit()
 connection.close()
 
 
